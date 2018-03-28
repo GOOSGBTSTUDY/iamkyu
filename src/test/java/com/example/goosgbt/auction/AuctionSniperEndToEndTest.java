@@ -1,5 +1,6 @@
 package com.example.goosgbt.auction;
 
+import org.jivesoftware.smack.XMPPException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ public class AuctionSniperEndToEndTest {
     private final ApplicationRunner application = new ApplicationRunner();
 
     @Test
-    void sniperJoinsAuctionUntilAuctionCloses() {
+    void sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
         auction.startSellingItem(); // 1단계
         application.startBiddingIn(auction); // 2단계
         auction.hasReceivedJoinRequestFromSniper(); // 3단계

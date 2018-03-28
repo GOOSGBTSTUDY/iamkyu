@@ -1,24 +1,55 @@
 package com.example.goosgbt.auction;
 
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
+
 public class FakeAuctionServer {
-    
+
+    public static final String ITEM_ID_AS_LOGIN = "auction-%s";
+    public static final String AUCTION_RESOURCE = "Auction";
+    public static final String XMPP_HOSTNAME = "localhost";
+    public static final String AUCTION_PASSWORD = "auction";
+
+    private final String itemId;
+    private final XMPPConnection connection;
+    private final SingleMessageListener messageListener = new SingleMessageListener();
+    private Chat currentChat;
+
     public FakeAuctionServer(String itemId) {
-        throw new UnsupportedOperationException();
+        this.itemId = itemId;
+        this.connection = new XMPPConnection(XMPP_HOSTNAME);
     }
 
-    public void startSellingItem() {
-        throw new UnsupportedOperationException();
+    public void startSellingItem() throws XMPPException {
+        connection.connect();
+        connection.login(
+                String.format(ITEM_ID_AS_LOGIN, itemId),
+                AUCTION_PASSWORD,
+                AUCTION_RESOURCE
+        );
+        connection.getChatManager().addChatListener(
+                (chat, createdLocally) -> {
+                    currentChat = chat;
+                    chat.addMessageListener(messageListener);
+                }
+        );
     }
 
-    public void hasReceivedJoinRequestFromSniper() {
-        throw new UnsupportedOperationException();
+    public void hasReceivedJoinRequestFromSniper() throws InterruptedException {
+        messageListener.receivesAMessage();
     }
 
-    public void announceClosed() {
-        throw new UnsupportedOperationException();
+    public void announceClosed() throws XMPPException {
+        currentChat.sendMessage(new Message());
     }
 
     public void stop() {
-        throw new UnsupportedOperationException();
+        connection.disconnect();
+    }
+
+    public String getItemId() {
+        return itemId;
     }
 }
