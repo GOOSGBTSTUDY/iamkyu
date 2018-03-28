@@ -11,8 +11,7 @@ import com.objogate.wl.swing.gesture.GesturePerformer;
 public class AuctionSniperDriver extends JFrameDriver {
     
     public AuctionSniperDriver(int timeOutMillis) {
-        super(
-                new GesturePerformer(), 
+        super(new GesturePerformer(), 
                 JFrameDriver.topLevelFrame(
                         named(MAIN_WINDOW_NAME),
                         showingOnScreen()
@@ -24,9 +23,5 @@ public class AuctionSniperDriver extends JFrameDriver {
     public void showSniperStatus(String statusText) {
         new JLabelDriver(this, named(MainWindow.SNIPER_STATUS_NAME))
                 .hasText(equalTo(statusText));
-    }
-
-    public void dispose() {
-        throw new UnsupportedOperationException();
     }
 }

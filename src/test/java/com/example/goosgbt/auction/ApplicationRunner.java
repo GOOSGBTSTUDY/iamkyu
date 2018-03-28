@@ -8,6 +8,7 @@ public class ApplicationRunner {
 
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
+    public static final String SNIPER_XMPP_ID = "sniper@localhost/Auction";
 
     public AuctionSniperDriver driver;
 
@@ -34,6 +35,10 @@ public class ApplicationRunner {
 
     public void showsSniperHasLostAuction() {
         driver.showSniperStatus(STATUS_LOST);
+    }
+
+    public void hasShownSniperIsBidding() {
+        driver.showSniperStatus(MainWindow.STATUS_BIDDING);
     }
 
     public void stop() {
