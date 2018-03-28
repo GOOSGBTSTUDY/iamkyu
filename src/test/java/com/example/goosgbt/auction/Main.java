@@ -19,6 +19,7 @@ public class Main {
     private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
 
     private MainWindow ui;
+    private Chat notToBeGCd;
 
     public Main() throws Exception {
         startUserInterface();
@@ -26,20 +27,10 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        XMPPConnection connection = connectTo(
-                args[ARG_HOSTNAME],
-                args[ARG_USERNAME],
-                args[ARG_PASSWORD]
+        main.joinAuction(
+                connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]), 
+                args[ARG_ITEM_ID]
         );
-        
-        Chat chat = connection.getChatManager().createChat(
-                auctionId(args[ARG_ITEM_ID], connection),
-                (aChat, message) -> {
-                    // TODO something
-                }
-        );
-        
-        chat.sendMessage(new Message());
     }
 
     private void startUserInterface() throws Exception {
@@ -57,5 +48,16 @@ public class Main {
 
     private static String auctionId(String itemId, XMPPConnection connection) {
         return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
+    }
+
+    private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
+        final Chat chat = connection.getChatManager().createChat(
+                auctionId(itemId, connection),
+                (aChat, message) -> {
+                    SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_LOST));
+                });
+
+        this.notToBeGCd = chat;
+        chat.sendMessage(new Message());
     }
 }
