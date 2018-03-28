@@ -1,0 +1,31 @@
+=========================== Auction Sniper ===========================
+
+Growing object-oriented software, guided by tests
+http://book.naver.com/bookdb/book_detail.nhn?bid=7231228
+
+
+== OpenFire 설치 == 
+터미널을 실행한 후 다음 명령어 실행
+
+$ docker run --name openfire -d \
+        --publish 9090:9090 \
+        --publish 5222:5222 \
+        --publish 7777:7777 \
+        sameersbn/openfire:3.10.3-19
+        
+== OpenFire 설정 ==
+1. 브라우저에서 localhost:9090 접속
+2. Language Selection: 언어는 한국어가 없으므로 English
+3. Server Settings: Domain을 localhost 설정
+4. Database Settings: Embedded Database 설정
+5. Profile Settings: Default 설정
+6. Administrator Account: Skip This Step 선택
+
+ID: admin / PASSWORD: admin 으로 로그인
+
+1. Users/Groups > Create New Users 메뉴로 진입 후 다음 계정 생성
+    - sniper / sniper
+    - auction-item-54321 / auction
+    - auction-item-65432 / auction
+2. Server > Server Settings > Resource Policy 메뉴로 진입 후 다음 설정
+    - Conflict Policy : Never Kick
